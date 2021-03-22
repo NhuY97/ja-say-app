@@ -1,28 +1,11 @@
 import React, { useState } from 'react';
-import { StatusBar, StyleSheet, Text, View, SafeAreaView, Image, Dimensions } from 'react-native';
-import * as Font from 'expo-font';
-import AppLoading from 'expo-app-loading';
+import { StatusBar, StyleSheet, Text, View, 
+	SafeAreaView, Image, Dimensions, TextInput } from 'react-native';
+import ButtonWithIcon from '~/components/ButtonWithIcon'
+
+const appImage = require('~/assets/images/cat-trans.png');
 
 export default function PhoneLogin() {
-
-	const fetchFonts = () => {
-		return Font.loadAsync({
-			'bubblegum': require('~/assets/fonts/Bubblegum.ttf')
-		});
-	};
-
-	const [dataLoaded, setDataLoaded] = useState(false);
-
-	if (!dataLoaded) {
-		return (
-			<AppLoading 
-				startAsync={fetchFonts} 
-				onFinish={() => setDataLoaded(true)} 
-				onError={console.log}
-				/>
-			);
-	}
-
 	return (
 			<SafeAreaView style={[styles.container, styles.bgColor]}>
 				<StatusBar barStyle='light-content' style={styles.bgColor} />
@@ -30,12 +13,31 @@ export default function PhoneLogin() {
 				<View style={[styles.container]}>
 					{/* */}
 					<View style={[styles.imageSession]}>
-						<Image source={require('~/assets/images/cat-trans.png')} resizeMode='contain' style={styles.imgCenter} />
-						<Text style={styles.slogan}>JASAY</Text>
+						<Image source={appImage} resizeMode='contain' style={styles.imgCenter} />
+						<Text style={styles.title}>JASAY</Text>
+						<Text style={styles.slogan}>GIẶT SẤY LẤY NGAY</Text>
 					</View>
 					{/* */}
 					<View style={styles.contentSession}>
-						<Text>Haa5a5sssfhai</Text>
+						{
+							[
+								{title:'Continue with Mobile Number', icon:'phone-square', backgroundColor:'#fff', iconColor:'#41CDCA', color:'#41CDCA'},
+								{title:'Continue with Facebook', icon:'facebook-square', backgroundColor:'#3B5998', iconColor:'#fff', color:'#fff'},
+								{title:'Continue with Apple', icon:'apple', backgroundColor:'#000', iconColor:'#fff', color:'#fff'},
+							]
+							.map((data, index) => {
+							return (
+									<ButtonWithIcon
+										key={index.toString()}
+										title={data.title}
+										icon={data.icon}
+										backgroundColor={data.backgroundColor}
+										iconColor={data.iconColor}	
+										color={data.color}																									
+									/>
+								);
+							})
+						}
 					</View>
 					{/* */}
 				</View>
@@ -67,13 +69,19 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		marginBottom: 14,
 	},
-	slogan: {
+	title: {
 		color: '#fff',
 		fontSize: 64,
-		fontFamily: 'bubblegum',
 		fontWeight: 'bold',
+		letterSpacing: 4,
+	},
+	slogan: {
+		color: '#fff',
+		fontSize: 24
 	},
 	contentSession: {
 		flex: 1,
+      	alignItems: 'center'
 	},
+
 });
