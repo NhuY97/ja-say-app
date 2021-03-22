@@ -1,11 +1,35 @@
 import React, { useState } from 'react';
 import { StatusBar, StyleSheet, Text, View, 
 	SafeAreaView, Image, Dimensions, TextInput } from 'react-native';
-import ButtonWithIcon from '~/components/ButtonWithIcon'
+import ButtonWithIcon from '~/components/ButtonWithIcon';
+import { Asset } from 'expo-asset';
+import AppLoading from 'expo-app-loading';
 
 const appImage = require('~/assets/images/cat-trans.png');
 
 export default function PhoneLogin() {
+
+	const [isReady, setReady] = useState(false);
+
+	const _cacheResourcesAsync = async () => {
+	    const images = [appImage];
+
+	    const cacheImages = images.map(image => {
+	      return Asset.fromModule(image).downloadAsync();
+	    }); 
+	    return Promise.all(cacheImages);
+  	}
+
+    if (!isReady) {
+      return (
+        <AppLoading
+          startAsync={_cacheResourcesAsync}
+          onFinish={() => setReady(true)}
+          onError={console.warn}
+        />
+      );
+  }
+
 	return (
 			<SafeAreaView style={[styles.container, styles.bgColor]}>
 				<StatusBar barStyle='light-content' style={styles.bgColor} />
@@ -13,7 +37,7 @@ export default function PhoneLogin() {
 				<View style={[styles.container]}>
 					{/* */}
 					<View style={[styles.imageSession]}>
-						<Image source={appImage} resizeMode='contain' style={styles.imgCenter} />
+						<Image source={appImage} resizeMode='cover' style={styles.imgCenter} borderRadius={100} />
 						<Text style={styles.title}>JASAY</Text>
 						<Text style={styles.slogan}>GIẶT SẤY LẤY NGAY</Text>
 					</View>
