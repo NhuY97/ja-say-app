@@ -1,111 +1,84 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar, StyleSheet, Text, View, 
-	SafeAreaView, Image, Dimensions, TextInput } from 'react-native';
+	SafeAreaView, Dimensions, TextInput, TouchableOpacity, Platform } from 'react-native';
+import { commonStyle } from '~/utils/Utils';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import ButtonWithIcon from '~/components/ButtonWithIcon';
-import { Asset } from 'expo-asset';
-import AppLoading from 'expo-app-loading';
 
-const appImage = require('~/assets/images/cat-trans.png');
+const headerFont = Platform.OS == 'ios' ? 'DamascusSemiBold' : 'Roboto';
 
-export default function PhoneLogin() {
-
-	const [isReady, setReady] = useState(false);
-
-	const _cacheResourcesAsync = async () => {
-	    const images = [appImage];
-
-	    const cacheImages = images.map(image => {
-	      return Asset.fromModule(image).downloadAsync();
-	    }); 
-	    return Promise.all(cacheImages);
-  	}
-
-    if (!isReady) {
-      return (
-        <AppLoading
-          startAsync={_cacheResourcesAsync}
-          onFinish={() => setReady(true)}
-          onError={console.warn}
-        />
-      );
-  }
+export default function PhoneLogin({ navigation }) {
 
 	return (
-			<SafeAreaView style={[styles.container, styles.bgColor]}>
-				<StatusBar barStyle='light-content' style={styles.bgColor} />
-				{/* */}
-				<View style={[styles.container]}>
-					{/* */}
-					<View style={[styles.imageSession]}>
-						<Image source={appImage} resizeMode='cover' style={styles.imgCenter} borderRadius={100} />
-						<Text style={styles.title}>JASAY</Text>
-						<Text style={styles.slogan}>GIẶT SẤY LẤY NGAY</Text>
-					</View>
-					{/* */}
-					<View style={styles.contentSession}>
-						{
-							[
-								{title:'Continue with Mobile Number', icon:'phone-square', backgroundColor:'#fff', iconColor:'#41CDCA', color:'#41CDCA'},
-								{title:'Continue with Facebook', icon:'facebook-square', backgroundColor:'#3B5998', iconColor:'#fff', color:'#fff'},
-								{title:'Continue with Apple', icon:'apple', backgroundColor:'#000', iconColor:'#fff', color:'#fff'},
-							]
-							.map((data, index) => {
-							return (
-									<ButtonWithIcon
-										key={index.toString()}
-										title={data.title}
-										icon={data.icon}
-										backgroundColor={data.backgroundColor}
-										iconColor={data.iconColor}	
-										color={data.color}																									
-									/>
-								);
-							})
-						}
-					</View>
-					{/* */}
+		<SafeAreaView style={[commonStyle.container, commonStyle.bgColor]}>
+			<StatusBar barStyle='light-content' style={commonStyle.bgColor}/>
+			<View>
+				<TouchableOpacity
+					style={{width: '20%'}}
+					onPress={() => navigation.goBack()}
+					activeOpacity={.7}>
+					<AntDesign
+					    name='arrowleft'
+					    size={28}
+					    color='#fff'
+					    style={styles.backIcon}/>
+				</TouchableOpacity>
+				<Text style={styles.h1}>Xin chào!</Text>
+				<Text style={styles.h1}>Nhập số điện thoại</Text>
+				<View style={styles.inputParent}>
+					<TextInput autoFocus={true} selectionColor='#fff' maxLength={11} style={styles.inputPhone} keyboardType='number-pad' placeholder='0000000000' placeholderTextColor="#E5FFF1" />
+					<TouchableOpacity
+						style={styles.closeButtonParent}
+            			onPress={() => setText('')} >
+            			<Feather
+						    name='x-circle'
+						    size={18}
+						    color='#fff'/>
+					</TouchableOpacity>
 				</View>
-				{/* */}
-			</SafeAreaView>
-		);
+			</View>
+		</SafeAreaView>
+	);
 }
 
-const { width } = Dimensions.get('window');
-const IMG_SIZE = width*1/2;
-
 const styles = StyleSheet.create({
-	container: {
-		flex:1
+	backIcon: {
+		paddingLeft: 10,
+		marginTop: 28,
 	},
-	bgColor: {
-		backgroundColor: '#41CDCA'
-	},
-	imageSession: {
-		flex: 2,
-		alignItems: 'center', 
-		justifyContent: 'center',
-	},
-	imgCenter: {
-		width: IMG_SIZE,
-		height: IMG_SIZE,
-		backgroundColor: '#fff',
-		borderRadius: IMG_SIZE,
-		overflow: "hidden",
-		marginBottom: 14,
-	},
-	title: {
+	h1: {
 		color: '#fff',
-		fontSize: 64,
+		fontSize: 28,
 		fontWeight: 'bold',
-		letterSpacing: 4,
+		marginTop: 10,
+		paddingLeft: 15,
+		fontFamily: headerFont,
 	},
-	slogan: {
+	inputPhone: {
+		paddingLeft: 5,
+		height: 40,
+		marginLeft: 12,
+		borderWidth: 1,
+		borderLeftWidth: 0,
+		borderRightWidth: 0,
+		borderTopWidth: 0,
+		borderColor: '#fff',
 		color: '#fff',
-		fontSize: 24
+		fontSize: 22,
+		width: '90%'
 	},
-	contentSession: {
-		flex: 1,
-      	alignItems: 'center'
+	inputParent: {
+		flexDirection: 'row',
+    	justifyContent: 'space-between',
 	},
-
+	closeButtonParent: {
+		justifyContent: 'center',
+    	alignItems: 'center',
+    	marginRight: 20,
+    	borderColor: '#fff',
+    	borderWidth: 1,
+		borderLeftWidth: 0,
+		borderRightWidth: 0,
+		borderTopWidth: 0,
+	},
 });

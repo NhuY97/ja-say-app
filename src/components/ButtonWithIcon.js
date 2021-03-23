@@ -1,22 +1,24 @@
 import React from 'react';
-import { TouchableHighlight, View, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
 export default function ButtonWithIcon(route) {
   return (
-    <TouchableHighlight
-      style={[styles.btnClickContain, {backgroundColor:route.backgroundColor}]}
-      underlayColor='#042417'>
-      <View
-        style={styles.btnContainer}>
-        <FontAwesome
-          name={route.icon}
-          size={25}
-          color={route.iconColor}
-          style={styles.btnIcon}/>
-        <Text style={[styles.btnText, {color:route.color}]}>{route.title}</Text>
-      </View>
-    </TouchableHighlight>
+    <TouchableOpacity
+        activeOpacity={.7}
+        onPress={route.onPress}
+        style={[styles.btnClickContain, {backgroundColor:route.backgroundColor}]}>
+        { /* */}
+        <View style={styles.btnContainer}>
+          <FontAwesome
+            name={route.icon}
+            size={25}
+            color={route.iconColor}
+            style={styles.btnIcon}/>
+          <Text style={[styles.btnText, {color:route.color}]}>{route.title}</Text>
+        </View>
+        { /* */}
+    </TouchableOpacity>
   );
 }
 
