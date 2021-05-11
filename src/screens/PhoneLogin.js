@@ -9,6 +9,7 @@ const headerFont = Platform.OS == 'ios' ? 'DamascusSemiBold' : 'Roboto';
 
 export default function PhoneLogin({ navigation }) {
 	const [phoneNumber, setPhoneNumber] = useState('');
+	const [isBtnActive, setBtnActive] = useState(false);
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
 
 	useEffect(() => {
@@ -30,6 +31,20 @@ export default function PhoneLogin({ navigation }) {
 		setKeyboardHeight(0);
 	};
 
+	const onChangeTextHandler = (phone) => {
+		setPhoneNumber(phone);
+		if (phone.length >= 10 && !isBtnActive) {
+			setBtnActive(true);
+		} else if (phone.length < 10 && isBtnActive) {
+			setBtnActive(false);
+		}
+	}
+
+	const onClearTextHandler = () => {
+		setPhoneNumber('');
+		setBtnActive(false);
+	}
+
 	return (
 		<SafeAreaView style={[commonStyle.container, commonStyle.bgColor]}>
 			<StatusBar barStyle='light-content' style={commonStyle.bgColor}/>
@@ -48,13 +63,13 @@ export default function PhoneLogin({ navigation }) {
 				<Text style={styles.h1}>Nhập số điện thoại</Text>
 				<View style={styles.inputParent}>
 					<TextInput 
-						value={phoneNumber} onChangeText={value => setPhoneNumber(value)} onSubmitEditing={Keyboard.dismiss}
+						value={phoneNumber} onChangeText={value => onChangeTextHandler(value)} onSubmitEditing={Keyboard.dismiss}
 						autoFocus={true} selectionColor='#fff' maxLength={11} style={styles.inputPhone} 
 						keyboardType='number-pad' placeholder='0000000000' placeholderTextColor="#E5FFF1" />
 					<TouchableOpacity
 						activeOpacity={.7}
 						style={styles.closeButtonParent}
-            			onPress={() => setPhoneNumber('')} >
+            			onPress={() => onClearTextHandler()} >
             			<Feather
 						    name='x-circle'
 						    size={18}
@@ -66,9 +81,10 @@ export default function PhoneLogin({ navigation }) {
 					<View style={{flex:1}}></View>
 					<TouchableOpacity
 						activeOpacity={.7}
-						style={[styles.nextBtn, {transform: [{ translateY: -(keyboardHeight) }]}]}
+						style={[styles.nextBtn, isBtnActive ? styles.btnActive : styles.btnInactive , {transform: [{ translateY: -(keyboardHeight) }]}]}
+						disabled={!isBtnActive}
             			onPress={() => alert('ok')} >
-        				<Text style={styles.h2} >NEXT</Text>
+        				<Text style={isBtnActive ? styles.h2Active : styles.h2} >NEXT</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -91,6 +107,11 @@ const styles = StyleSheet.create({
 	},
 	h2: {
 		color: '#fff',
+		fontSize: 20,
+		fontFamily: headerFont,
+	},
+	h2Active: {
+		color: '#41CDCA',
 		fontSize: 20,
 		fontFamily: headerFont,
 	},
@@ -132,5 +153,11 @@ const styles = StyleSheet.create({
 		alignItems: 'center', 
 		width: '100%',
 		height: 50,
+	},
+	btnInactive: {
+		backgroundColor: '#ccc',
+	},
+	btnActive: {
+		backgroundColor: '#fff',
 	},
 });
