@@ -16,16 +16,8 @@ const config = {
 
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
+  firebase.auth().languageCode = 'vi';
 }
 
-export const auth = firebase.auth();
+export const firebaseConfig = firebase.apps.length ? firebase.app().options : undefined;
 
-export const loginWithEmail = (email, password) =>
-  auth.signInWithEmailAndPassword(email, password);
-
-export const registerWithEmail = (email, password) =>
-  auth.createUserWithEmailAndPassword(email, password);
-
-export const logout = () => auth.signOut();
-
-export const passwordReset = email => auth.sendPasswordResetEmail(email);

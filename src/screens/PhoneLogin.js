@@ -1,18 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StatusBar, StyleSheet, Text, View,
-	SafeAreaView, Dimensions, TextInput, TouchableOpacity, Platform, Keyboard, KeyboardAvoidingView } from 'react-native';
-import { commonStyle } from '~/utils/Utils';
+	SafeAreaView, Dimensions, TextInput, TouchableOpacity, Platform, Keyboard } from 'react-native';
+import { commonStyle, alertMessage } from '~/utils/Utils';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import ButtonWithIcon from '~/components/ButtonWithIcon';
-import { loginWithEmail } from '~/Firebase/firebase';
+import { firebaseConfig, getVerificationId } from '~/Firebase/firebase';
+import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+import * as firebase from "firebase";
+import parsePhoneNumber from 'libphonenumber-js';
 
 const headerFont = Platform.OS == 'ios' ? 'DamascusSemiBold' : 'Roboto';
 
 export default function PhoneLogin({ navigation }) {
 	const [phoneNumber, setPhoneNumber] = useState('');
+	const [title, setTitle] = useState('Xin chào!');
 	const [isBtnActive, setBtnActive] = useState(false);
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
 	const [btnNextY, setBtnNextY] = useState(0);
+	const [verificationId, setVerificationId] = useState();
+	const recaptchaVerifier = useRef(null);
 
 	useEffect(() => {
 		Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
@@ -47,9 +53,25 @@ export default function PhoneLogin({ navigation }) {
 		setBtnActive(false);
 	}
 
-	const register = () => {
-		loginWithEmail('email@gmail.com.vn', 'ahihi');
-	}
+	const register = async () => {
+          try {
+          	const phoneNumberToVerify = parsePhoneNumber(phoneNumber, 'VN');
+          	console.log('Phone to verify: ' + phoneNumberToVerify.number);
+            const phoneProvider = new firebase.auth.PhoneAuthProvider();
+            const verificationId = await phoneProvider.verifyPhoneNumber(
+              phoneNumberToVerify.number,
+              recaptchaVerifier.current
+            );
+            setVerificationId(verificationId);
+            alertMessage('Verification code has been sent to your phone.');
+          } catch (err) {
+          	console.log(err.message);
+          	if (err.message !== 'Cancelled by user') {
+          		setTitle(err.message)
+          	}
+          }
+    }
+	
 
 	const onLayout=(event)=> {
     	setBtnNextY(event.nativeEvent.layout.y);
@@ -57,6 +79,10 @@ export default function PhoneLogin({ navigation }) {
 
 	return (
 		<SafeAreaView style={[commonStyle.container, commonStyle.bgColor]}>
+		    <FirebaseRecaptchaVerifierModal
+        			ref={recaptchaVerifier}
+        			firebaseConfig={firebaseConfig}
+        	/>
 			<StatusBar barStyle='light-content' style={commonStyle.bgColor}/>
 			<View style={commonStyle.container}>
 				<TouchableOpacity
@@ -69,7 +95,7 @@ export default function PhoneLogin({ navigation }) {
 					    color='#fff'
 					    style={styles.backIcon}/>
 				</TouchableOpacity>
-				<Text style={styles.h1}>Xin chào!</Text>
+				<Text style={styles.h1}>{title}</Text>
 				<Text style={styles.h1}>Nhập số điện thoại</Text>
 				<View style={styles.inputParent}>
 					<TextInput 
@@ -94,7 +120,7 @@ export default function PhoneLogin({ navigation }) {
 							activeOpacity={.7}
 							style={[styles.nextBtn, isBtnActive ? styles.btnActive : styles.btnInactive, {transform: [{ translateY: -(btnNextY > 200 ? keyboardHeight : 0) }]} ]} 
 							disabled={!isBtnActive}
-	            			onPress={() => register()} 
+	            			onPress={register} 
 	            			onLayout={onLayout}>
 	        				<Text style={isBtnActive ? styles.h2Active : styles.h2} >NEXT</Text>
 						</TouchableOpacity>
@@ -173,8 +199,5 @@ const styles = StyleSheet.create({
 	},
 	btnActive: {
 		backgroundColor: '#fff',
-	},
-	keyboardAvoid: {
-		marginBottom: 7,
 	},
 });
