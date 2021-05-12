@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StatusBar, StyleSheet, Text, View,
-	SafeAreaView, Dimensions, TextInput, TouchableOpacity, Platform, Keyboard } from 'react-native';
+	SafeAreaView, Dimensions, TextInput, TouchableOpacity, Platform, Keyboard, KeyboardAvoidingView } from 'react-native';
 import { commonStyle } from '~/utils/Utils';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import ButtonWithIcon from '~/components/ButtonWithIcon';
@@ -12,6 +12,7 @@ export default function PhoneLogin({ navigation }) {
 	const [phoneNumber, setPhoneNumber] = useState('');
 	const [isBtnActive, setBtnActive] = useState(false);
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
+	const [btnNextY, setBtnNextY] = useState(0);
 
 	useEffect(() => {
 		Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
@@ -50,6 +51,10 @@ export default function PhoneLogin({ navigation }) {
 		loginWithEmail('email@gmail.com.vn', 'ahihi');
 	}
 
+	const onLayout=(event)=> {
+    	setBtnNextY(event.nativeEvent.layout.y);
+  	}
+
 	return (
 		<SafeAreaView style={[commonStyle.container, commonStyle.bgColor]}>
 			<StatusBar barStyle='light-content' style={commonStyle.bgColor}/>
@@ -83,14 +88,18 @@ export default function PhoneLogin({ navigation }) {
 					</TouchableOpacity>
 				</View>
 				<View style={commonStyle.container}>
-					<View style={{flex:1}}></View>
-					<TouchableOpacity
-						activeOpacity={.7}
-						style={[styles.nextBtn, isBtnActive ? styles.btnActive : styles.btnInactive , {transform: [{ translateY: -(keyboardHeight) }]}]}
-						disabled={!isBtnActive}
-            			onPress={() => register()} >
-        				<Text style={isBtnActive ? styles.h2Active : styles.h2} >NEXT</Text>
-					</TouchableOpacity>
+					<View style={{flex:1,justifyContent: 'flex-end'}}>
+
+						<TouchableOpacity
+							activeOpacity={.7}
+							style={[styles.nextBtn, isBtnActive ? styles.btnActive : styles.btnInactive, {transform: [{ translateY: -(btnNextY > 200 ? keyboardHeight : 0) }]} ]} 
+							disabled={!isBtnActive}
+	            			onPress={() => register()} 
+	            			onLayout={onLayout}>
+	        				<Text style={isBtnActive ? styles.h2Active : styles.h2} >NEXT</Text>
+						</TouchableOpacity>
+
+					</View>
 				</View>
 			</View>
 		</SafeAreaView>
@@ -131,12 +140,12 @@ const styles = StyleSheet.create({
 		borderColor: '#fff',
 		color: '#fff',
 		fontSize: 22,
-		flex:8
+		flex:8,
 	},
 	inputParent: {
 		flexDirection: 'row',
     	justifyContent: 'space-between',
-    	marginTop: 10
+    	marginTop: 10,
 	},
 	closeButtonParent: {
 		justifyContent: 'center',
@@ -164,5 +173,8 @@ const styles = StyleSheet.create({
 	},
 	btnActive: {
 		backgroundColor: '#fff',
+	},
+	keyboardAvoid: {
+		marginBottom: 7,
 	},
 });
