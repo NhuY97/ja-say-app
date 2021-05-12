@@ -4,6 +4,7 @@ import { StatusBar, StyleSheet, Text, View,
 import { commonStyle } from '~/utils/Utils';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import ButtonWithIcon from '~/components/ButtonWithIcon';
+import { loginWithEmail } from '~/Firebase/firebase';
 
 const headerFont = Platform.OS == 'ios' ? 'DamascusSemiBold' : 'Roboto';
 
@@ -45,6 +46,10 @@ export default function PhoneLogin({ navigation }) {
 		setBtnActive(false);
 	}
 
+	const register = () => {
+		loginWithEmail('email@gmail.com.vn', 'ahihi');
+	}
+
 	return (
 		<SafeAreaView style={[commonStyle.container, commonStyle.bgColor]}>
 			<StatusBar barStyle='light-content' style={commonStyle.bgColor}/>
@@ -83,7 +88,7 @@ export default function PhoneLogin({ navigation }) {
 						activeOpacity={.7}
 						style={[styles.nextBtn, isBtnActive ? styles.btnActive : styles.btnInactive , {transform: [{ translateY: -(keyboardHeight) }]}]}
 						disabled={!isBtnActive}
-            			onPress={() => alert('ok')} >
+            			onPress={() => register()} >
         				<Text style={isBtnActive ? styles.h2Active : styles.h2} >NEXT</Text>
 					</TouchableOpacity>
 				</View>

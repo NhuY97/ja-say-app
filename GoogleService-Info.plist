@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>876942974248-o6m8l5g3e7nrqd57gq5c4bejpkmj6ecb.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.876942974248-o6m8l5g3e7nrqd57gq5c4bejpkmj6ecb</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDrClOBUFu52vW_3FP7DeUgrAUjBuvv6ug</string>
+	<key>GCM_SENDER_ID</key>
+	<string>876942974248</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>jasay</string>
+	<key>PROJECT_ID</key>
+	<string>jasay-app</string>
+	<key>STORAGE_BUCKET</key>
+	<string>jasay-app.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:876942974248:ios:f757e5c792beb31364c41d</string>
+</dict>
+</plist>
