@@ -86,6 +86,7 @@ export default function AppHome({navigation}) {
   	const authenFirebase = () => {
 		if (firebase.auth().currentUser) {
 			console.log('user ' + firebase.auth().currentUser.phoneNumber);
+			navigation.navigate('OnboardTab');
 		} else {
 			navigation.navigate('HomeLogin');
 		}

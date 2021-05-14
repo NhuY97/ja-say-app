@@ -25,15 +25,13 @@ export default function OtpLogin({ route, navigation }) {
 	const verifyCode = async (verificationCode) => {
         try {
         	startLoading();
-        	 console.log(firebase.auth().currentUser);
             const credential = firebase.auth.PhoneAuthProvider.credential(
               route.params.verificationId,
               verificationCode
             );
             await firebase.auth().signInWithCredential(credential);
-            setTitle('Phone authentication successful 👍');
  			setLoading(false);
- 			console.log(firebase.auth().currentUser);
+ 			navigation.navigate('OnboardTab');
         } catch (err) {
         	console.log(err.message);
             setTitle('OTP không đúng, vui lòng thử lại');
