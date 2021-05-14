@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar, StyleSheet, Text, View, 
 	SafeAreaView, Image, Dimensions } from 'react-native';
-import { Asset } from 'expo-asset';
-import AppLoading from 'expo-app-loading';
 import { alertMessage, commonStyle } from '~/utils/Utils';
 import ButtonWithIcon from '~/components/ButtonWithIcon';
 
@@ -11,27 +9,6 @@ const { width } = Dimensions.get('window');
 const IMG_SIZE = width*1/2;
 
 export default function HomeLogin({navigation}) {
-
-	const [isReady, setReady] = useState(false);
-
-	const _cacheResourcesAsync = async () => {
-	    const images = [appImage];
-
-	    const cacheImages = images.map(image => {
-	      return Asset.fromModule(image).downloadAsync();
-	    }); 
-	    return Promise.all(cacheImages);
-  	}
-
-    if (!isReady) {
-      return (
-        <AppLoading
-          startAsync={_cacheResourcesAsync}
-          onFinish={() => setReady(true)}
-          onError={console.warn}
-        />
-      );
-  	}
 
 	const _onPressPhoneLogin = () => {
 		navigation.navigate('PhoneLogin');
