@@ -16,7 +16,7 @@ const config = {
 
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
-  firebase.auth().languageCode = 'vi';
+  firebase.auth().useDeviceLanguage();
 }
 
 export const firebaseConfig = firebase.apps.length ? firebase.app().options : undefined;

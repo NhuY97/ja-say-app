@@ -3,7 +3,6 @@ import { StatusBar, StyleSheet, Text, View,
 	SafeAreaView, Dimensions, TextInput, TouchableOpacity, Platform, Keyboard } from 'react-native';
 import { commonStyle, alertMessage } from '~/utils/Utils';
 import { AntDesign, Feather } from '@expo/vector-icons';
-import ButtonWithIcon from '~/components/ButtonWithIcon';
 import { firebaseConfig, getVerificationId } from '~/Firebase/firebase';
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import * as firebase from "firebase";
@@ -17,7 +16,6 @@ export default function PhoneLogin({ navigation }) {
 	const [isBtnActive, setBtnActive] = useState(false);
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
 	const [btnNextY, setBtnNextY] = useState(0);
-	const [verificationId, setVerificationId] = useState();
 	const recaptchaVerifier = useRef(null);
 
 	useEffect(() => {
@@ -62,11 +60,10 @@ export default function PhoneLogin({ navigation }) {
               phoneNumberToVerify.number,
               recaptchaVerifier.current
             );
-            setVerificationId(verificationId);
-            alertMessage('Verification code has been sent to your phone.');
+            navigation.navigate('OtpLogin', {verificationId: verificationId});
           } catch (err) {
-          	console.log(err.message);
-          	if (err.message !== 'Cancelled by user') {
+          	console.log('recaptcha err code: ' + err.code + ' - msg : ' + err.message);
+          	if (err.code !== 'ERR_FIREBASE_RECAPTCHA_CANCEL') {
           		setTitle(err.message)
           	}
           }
@@ -99,9 +96,9 @@ export default function PhoneLogin({ navigation }) {
 				<Text style={styles.h1}>Nhập số điện thoại</Text>
 				<View style={styles.inputParent}>
 					<TextInput 
-						value={phoneNumber} onChangeText={value => onChangeTextHandler(value)} onSubmitEditing={Keyboard.dismiss}
+						value={phoneNumber} onChangeText={value => onChangeTextHandler(value)}
 						autoFocus={true} selectionColor='#fff' maxLength={11} style={styles.inputPhone} 
-						keyboardType='number-pad' placeholder='0000000000' placeholderTextColor="#E5FFF1" />
+						keyboardType='phone-pad' placeholder='0000000000' placeholderTextColor="#E5FFF1" />
 					<TouchableOpacity
 						activeOpacity={.7}
 						style={styles.closeButtonParent}
