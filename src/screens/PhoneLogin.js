@@ -17,13 +17,18 @@ export default function PhoneLogin({ navigation }) {
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
 	const [btnNextY, setBtnNextY] = useState(0);
 	const recaptchaVerifier = useRef(null);
+	isMounted = false;
 
 	useEffect(() => {
-		Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
-		Keyboard.addListener('keyboardDidHide', _keyboardDidHide);
+		let isMounted = true;
+		if (isMounted) {
+			Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
+			Keyboard.addListener('keyboardDidHide', _keyboardDidHide);
+		}
 
 		// cleanup function
 		return () => {
+			  isMounted = false
 			  Keyboard.removeListener('keyboardDidShow', _keyboardDidShow);
 			  Keyboard.removeListener('keyboardDidHide', _keyboardDidHide);
 		};
